@@ -17,7 +17,7 @@
 include config/Makefile
 include stdlib/StdlibModules
 
-CAMLC=boot/ocamlrun boot/ocamlc -nostdlib -I boot
+CAMLC=boot/ocamlrun boot/ocamlc -g -nostdlib -I boot 
 CAMLOPT=boot/ocamlrun ./ocamlopt -nostdlib -I stdlib -I otherlibs/dynlink
 COMPFLAGS= -strict-sequence -warn-error A $(INCLUDES)
 LINKFLAGS=
@@ -352,7 +352,7 @@ partialclean::
 	rm -f compilerlibs/ocamloptcomp.cma
 
 ocamlopt: compilerlibs/ocamlcommon.cma compilerlibs/ocamloptcomp.cma $(OPTSTART)
-	$(CAMLC) $(LINKFLAGS) -o ocamlopt \
+	$(CAMLC) $(LINKFLAGS) -g -o ocamlopt \
           compilerlibs/ocamlcommon.cma compilerlibs/ocamloptcomp.cma $(OPTSTART)
 	@sed -e 's|@compiler@|$$topdir/boot/ocamlrun $$topdir/ocamlopt|' \
 	  driver/ocamlcomp.sh.in > ocamlcompopt.sh

@@ -14,4 +14,4 @@
 
 topdir=`dirname $0`
 
-exec @compiler@ -nostdlib -I $topdir/stdlib "$@"
+exec @compiler@ -nostdlib -g -I $topdir/stdlib "$@"
