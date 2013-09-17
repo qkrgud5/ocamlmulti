@@ -261,7 +261,7 @@ CAMLprim value caml_obj_add_offset (value v, value offset)
 CAMLprim value caml_lazy_follow_forward (value v)
 {
   if (Is_block (v) && Is_in_value_area(v)
-      && Tag_val (v) == Forward_tag){
+      && Tag_val (v) == get_Forward_tag()){
     return Forward_val (v);
   }else{
     return v;
@@ -273,7 +273,7 @@ CAMLprim value caml_lazy_make_forward (value v)
   CAMLparam1 (v);
   CAMLlocal1 (res);
 
-  res = caml_alloc_small (1, Forward_tag);
+  res = caml_alloc_small (1, get_Forward_tag());
   Field (res, 0) = v;
   CAMLreturn (res);
 }
@@ -283,7 +283,7 @@ CAMLprim value caml_lazy_make_forward_r (pctxt ctx, value v)
   CAMLparam1_r (ctx, v);
   CAMLlocal1_r (ctx, res);
 
-  res = caml_alloc_small_r (ctx, 1, Forward_tag);
+  res = caml_alloc_small_r (ctx, 1, get_Forward_tag());
   Field (res, 0) = v;
   CAMLreturn_r (ctx, res);
 }

@@ -64,7 +64,7 @@ static void check_head (value v)
   Assert (Wosize_val (v) != 0);
   Assert (Color_hd (Hd_val (v)) != Caml_blue);
   Assert (Is_in_heap (v));
-  if (Tag_val (v) == Infix_tag){
+  if (Tag_val (v) == get_Infix_tag()){
     int offset = Wsize_bsize (Infix_offset_val (v));
     value trueval = Val_op (&Field (v, -offset));
     Assert (Tag_val (trueval) == Closure_tag);

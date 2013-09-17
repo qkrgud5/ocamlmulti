@@ -783,3 +783,8 @@ CAMLexport void * caml_stat_resize (void * blk, asize_t sz)
   if (result == NULL) caml_raise_out_of_memory ();
   return result;
 }
+
+int get_Forward_tag(){return Forward_tag;}
+int get_Infix_tag(){return Infix_tag;}
+int get_Object_tag(){return Object_tag;}
+int get_Closure_tag(){return Closure_tag;}

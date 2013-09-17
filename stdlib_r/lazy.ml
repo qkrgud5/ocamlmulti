@@ -57,12 +57,14 @@ external force : 'a t -> 'a = "%lazy_force";;
 
 let force_val = CamlinternalLazy.force_val;;
 
+(* phc todo *)
 let from_fun (f : unit -> 'arg) =
   let x = Obj.new_block Obj.lazy_tag 1 in
   Obj.set_field x 0 (Obj.repr f);
   (Obj.obj x : 'arg t)
 ;;
 
+(* phc todo *)
 let from_val (v : 'arg) =
   let t = Obj.tag (Obj.repr v) in
   if t = Obj.forward_tag || t = Obj.lazy_tag || t = Obj.double_tag then begin
@@ -72,6 +74,7 @@ let from_val (v : 'arg) =
   end
 ;;
 
+(* phc todo *)
 let is_val (l : 'arg t) = Obj.tag (Obj.repr l) <> Obj.lazy_tag;;
 
 let lazy_from_fun = from_fun;;

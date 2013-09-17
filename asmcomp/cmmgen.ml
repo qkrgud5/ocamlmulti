@@ -47,8 +47,8 @@ let floatarray_tag = Cconst_int Obj.double_array_tag
 let block_header tag sz =
   Nativeint.add (Nativeint.shift_left (Nativeint.of_int sz) 10)
                 (Nativeint.of_int tag)
-let closure_header sz = block_header Obj.closure_tag sz
-let infix_header ofs = block_header Obj.infix_tag ofs
+let closure_header sz = block_header (Obj.closure_tag-Misc.nst_shift) sz
+let infix_header ofs = block_header (Obj.infix_tag-Misc.nst_shift) ofs
 let float_header = block_header Obj.double_tag (size_float / size_addr)
 let floatarray_header len =
       block_header Obj.double_array_tag (len * size_float / size_addr)

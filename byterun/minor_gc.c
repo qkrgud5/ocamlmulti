@@ -141,7 +141,7 @@ void caml_set_minor_heap_size_r (pctxt ctx, asize_t size)
 
 static value oldify_todo_list = 0;
 
-/* Note that the tests on the tag depend on the fact that Infix_tag,
+/* Note that the tests on the tag depend on the fact that get_Infix_tag(),
    Forward_tag, and No_scan_tag are contiguous. */
 
 void caml_oldify_one (value v, value *p)
@@ -159,7 +159,7 @@ void caml_oldify_one (value v, value *p)
       *p = Field (v, 0);  /*  then forward pointer is first field. */
     }else{
       tag = Tag_hd (hd);
-      if (tag < Infix_tag){
+      if (tag < get_Infix_tag()){
         value field0;
 
         sz = Wosize_hd (hd);
@@ -185,7 +185,7 @@ void caml_oldify_one (value v, value *p)
         Hd_val (v) = 0;            /* Set forward flag */
         Field (v, 0) = result;     /*  and forward pointer. */
         *p = result;
-      }else if (tag == Infix_tag){
+      }else if (tag == get_Infix_tag()){
         mlsize_t offset = Infix_offset_hd (hd);
         caml_oldify_one (v - offset, p);   /* Cannot recurse deeper than 1. */
         *p += offset;
@@ -194,7 +194,7 @@ void caml_oldify_one (value v, value *p)
         tag_t ft = 0;
         int vv = 1;
 
-        Assert (tag == Forward_tag);
+        Assert (tag == get_Forward_tag());
         if (Is_block (f)){
           if (Is_young (f)){
             vv = 1;
@@ -206,10 +206,10 @@ void caml_oldify_one (value v, value *p)
             }
           }
         }
-        if (!vv || ft == Forward_tag || ft == Lazy_tag || ft == Double_tag){
+        if (!vv || ft == get_Forward_tag() || ft == Lazy_tag || ft == Double_tag){
           /* Do not short-circuit the pointer.  Copy as a normal block. */
           Assert (Wosize_hd (hd) == 1);
-          result = caml_alloc_shr (1, Forward_tag);
+          result = caml_alloc_shr (1, get_Forward_tag());
           *p = result;
           Hd_val (v) = 0;             /* Set (GC) forward flag */
           Field (v, 0) = result;      /*  and forward pointer. */
@@ -242,7 +242,7 @@ void caml_oldify_one_r (pctxt ctx, value v, value *p)
       *p = Field (v, 0);  /*  then forward pointer is first field. */
     }else{
       tag = Tag_hd (hd);
-      if (tag < Infix_tag){
+      if (tag < get_Infix_tag()){
         value field0;
 
         sz = Wosize_hd (hd);
@@ -268,7 +268,7 @@ void caml_oldify_one_r (pctxt ctx, value v, value *p)
         Hd_val (v) = 0;            /* Set forward flag */
         Field (v, 0) = result;     /*  and forward pointer. */
         *p = result;
-      }else if (tag == Infix_tag){
+      }else if (tag == get_Infix_tag()){
         mlsize_t offset = Infix_offset_hd (hd);
         caml_oldify_one (v - offset, p);   /* Cannot recurse deeper than 1. */
         *p += offset;
@@ -277,7 +277,7 @@ void caml_oldify_one_r (pctxt ctx, value v, value *p)
         tag_t ft = 0;
         int vv = 1;
 
-        Assert (tag == Forward_tag);
+        Assert (tag == get_Forward_tag());
         if (Is_block (f)){
           if (Is_young_r (ctx, f)){
             vv = 1;
@@ -289,10 +289,10 @@ void caml_oldify_one_r (pctxt ctx, value v, value *p)
             }
           }
         }
-        if (!vv || ft == Forward_tag || ft == Lazy_tag || ft == Double_tag){
+        if (!vv || ft == get_Forward_tag() || ft == Lazy_tag || ft == Double_tag){
           /* Do not short-circuit the pointer.  Copy as a normal block. */
           Assert (Wosize_hd (hd) == 1);
-          result = caml_alloc_shr_r (ctx, 1, Forward_tag);
+          result = caml_alloc_shr_r (ctx, 1, get_Forward_tag());
           *p = result;
           Hd_val (v) = 0;             /* Set (GC) forward flag */
           Field (v, 0) = result;      /*  and forward pointer. */

@@ -81,7 +81,7 @@ static void invert_pointer_at (word *p)
 
         while (Ecolor (*hp) == 0) hp = (word *) *hp;
                                                    Assert (Ecolor (*hp) == 3);
-        if (Tag_ehd (*hp) == Closure_tag){
+        if (Tag_ehd (*hp) == get_Closure_tag()){
           /* This is the first infix found in this block. */
           /* Save original header. */
           *p = *hp;
@@ -89,7 +89,7 @@ static void invert_pointer_at (word *p)
           Hd_val (q) = (header_t) ((word) p | 2);
           /* Change block header's tag to Infix_tag, and change its size
              to point to the infix list. */
-          *hp = Make_ehd (Wosize_bhsize (q - val), Infix_tag, 3);
+          *hp = Make_ehd (Wosize_bhsize (q - val), get_Infix_tag(), 3);
         }else{                            Assert (Tag_ehd (*hp) == Infix_tag);
           /* Point the last of this infix list to the current first infix
              list of the block. */
@@ -97,7 +97,7 @@ static void invert_pointer_at (word *p)
           /* Point the head of this infix list to the above. */
           Hd_val (q) = (header_t) ((word) p | 2);
           /* Change block header's size to point to this infix list. */
-          *hp = Make_ehd (Wosize_bhsize (q - val), Infix_tag, 3);
+          *hp = Make_ehd (Wosize_bhsize (q - val), get_Infix_tag(), 3);
         }
       }
       break;
@@ -135,7 +135,7 @@ static void invert_pointer_at_r (pctxt ctx, word *p)
 
         while (Ecolor (*hp) == 0) hp = (word *) *hp;
                                                    Assert (Ecolor (*hp) == 3);
-        if (Tag_ehd (*hp) == Closure_tag){
+        if (Tag_ehd (*hp) == get_Closure_tag()){
           /* This is the first infix found in this block. */
           /* Save original header. */
           *p = *hp;
@@ -143,7 +143,7 @@ static void invert_pointer_at_r (pctxt ctx, word *p)
           Hd_val (q) = (header_t) ((word) p | 2);
           /* Change block header's tag to Infix_tag, and change its size
              to point to the infix list. */
-          *hp = Make_ehd (Wosize_bhsize (q - val), Infix_tag, 3);
+          *hp = Make_ehd (Wosize_bhsize (q - val), get_Infix_tag(), 3);
         }else{                            Assert (Tag_ehd (*hp) == Infix_tag);
           /* Point the last of this infix list to the current first infix
              list of the block. */
@@ -151,7 +151,7 @@ static void invert_pointer_at_r (pctxt ctx, word *p)
           /* Point the head of this infix list to the above. */
           Hd_val (q) = (header_t) ((word) p | 2);
           /* Change block header's size to point to this infix list. */
-          *hp = Make_ehd (Wosize_bhsize (q - val), Infix_tag, 3);
+          *hp = Make_ehd (Wosize_bhsize (q - val), get_Infix_tag(), 3);
         }
       }
       break;
@@ -265,7 +265,7 @@ static void do_compaction (void)
         sz = Whsize_ehd (q);
         t = Tag_ehd (q);
 
-        if (t == Infix_tag){
+        if (t == get_Infix_tag()){
           /* Get the original header of this block. */
           infixes = p + sz;
           q = *infixes;
@@ -318,7 +318,7 @@ static void do_compaction (void)
       while ((char *) p < chend){
         word q = *p;
 
-        if (Ecolor (q) == 0 || Tag_ehd (q) == Infix_tag){
+        if (Ecolor (q) == 0 || Tag_ehd (q) == get_Infix_tag()){
           /* There were (normal or infix) pointers to this block. */
           size_t sz;
           tag_t t;
@@ -329,7 +329,7 @@ static void do_compaction (void)
           sz = Whsize_ehd (q);
           t = Tag_ehd (q);
 
-          if (t == Infix_tag){
+          if (t == get_Infix_tag()){
             /* Get the original header of this block. */
             infixes = p + sz;
             q = *infixes;                             Assert (Ecolor (q) == 2);
@@ -359,7 +359,7 @@ static void do_compaction (void)
                 * (word *) q = (word) Val_hp ((word *) newadr + (infixes - p));
                 q = next;
               }                    Assert (Ecolor (q) == 1 || Ecolor (q) == 3);
-              *infixes = Make_header (infixes - p, Infix_tag, Caml_white);
+              *infixes = Make_header (infixes - p, get_Infix_tag(), Caml_white);
               infixes = (word *) q;
             }
           }
@@ -659,7 +659,7 @@ static void do_compaction_r (pctxt ctx)
         sz = Whsize_ehd (q);
         t = Tag_ehd (q);
 
-        if (t == Infix_tag){
+        if (t == get_Infix_tag()){
           /* Get the original header of this block. */
           infixes = p + sz;
           q = *infixes;
@@ -712,7 +712,7 @@ static void do_compaction_r (pctxt ctx)
       while ((char *) p < chend){
         word q = *p;
 
-        if (Ecolor (q) == 0 || Tag_ehd (q) == Infix_tag){
+        if (Ecolor (q) == 0 || Tag_ehd (q) == get_Infix_tag()){
           /* There were (normal or infix) pointers to this block. */
           size_t sz;
           tag_t t;
@@ -723,7 +723,7 @@ static void do_compaction_r (pctxt ctx)
           sz = Whsize_ehd (q);
           t = Tag_ehd (q);
 
-          if (t == Infix_tag){
+          if (t == get_Infix_tag()){
             /* Get the original header of this block. */
             infixes = p + sz;
             q = *infixes;                             Assert (Ecolor (q) == 2);
@@ -753,7 +753,7 @@ static void do_compaction_r (pctxt ctx)
                 * (word *) q = (word) Val_hp ((word *) newadr + (infixes - p));
                 q = next;
               }                    Assert (Ecolor (q) == 1 || Ecolor (q) == 3);
-              *infixes = Make_header (infixes - p, Infix_tag, Caml_white);
+              *infixes = Make_header (infixes - p, get_Infix_tag(), Caml_white);
               infixes = (word *) q;
             }
           }

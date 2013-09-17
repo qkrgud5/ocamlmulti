@@ -383,10 +383,10 @@ static void extern_rec(value v)
     tag_t tag = Tag_hd(hd);
     mlsize_t sz = Wosize_hd(hd);
 
-    if (tag == Forward_tag) {
+    if (tag == get_Forward_tag()) {
       value f = Forward_val (v);
       if (Is_block (f)
-          && (!Is_in_value_area(f) || Tag_val (f) == Forward_tag
+          && (!Is_in_value_area(f) || Tag_val (f) == get_Forward_tag()
               || Tag_val (f) == Lazy_tag || Tag_val (f) == Double_tag)){
         /* Do not short-circuit the pointer. */
       }else{

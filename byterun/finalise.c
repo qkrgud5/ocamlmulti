@@ -393,7 +393,7 @@ CAMLprim value caml_final_register (value f, value v)
   }
   Assert (young < size);
   final_table[young].fun = f;
-  if (Tag_val (v) == Infix_tag){
+  if (Tag_val (v) == get_Infix_tag()){
     final_table[young].offset = Infix_offset_val (v);
     final_table[young].val = v - Infix_offset_val (v);
   }else{
@@ -428,7 +428,7 @@ CAMLprim value caml_final_register_r (pctxt ctx, value f, value v)
   }
   Assert (ctx->final_young < ctx->final_size);
   ctx->final_table[ctx->final_young].fun = f;
-  if (Tag_val (v) == Infix_tag){
+  if (Tag_val (v) == get_Infix_tag()){
     ctx->final_table[ctx->final_young].offset = Infix_offset_val (v);
     ctx->final_table[ctx->final_young].val = v - Infix_offset_val (v);
   }else{

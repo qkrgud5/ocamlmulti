@@ -87,7 +87,7 @@ void caml_darken (value v, value *p /* not used */)
   if (Is_block (v) && Is_in_heap (v)) {
     header_t h = Hd_val (v);
     tag_t t = Tag_hd (h);
-    if (t == Infix_tag){
+    if (t == get_Infix_tag()){
       v -= Infix_offset_val(v);
       h = Hd_val (v);
       t = Tag_hd (h);
@@ -142,17 +142,17 @@ static void mark_slice (intnat work)
           child = Field (v, i);
           if (Is_block (child) && Is_in_heap (child)) {
             hd = Hd_val (child);
-            if (Tag_hd (hd) == Forward_tag){
+            if (Tag_hd (hd) == get_Forward_tag()){
               value f = Forward_val (child);
               if (Is_block (f)
-                  && (!Is_in_value_area(f) || Tag_val (f) == Forward_tag
+                  && (!Is_in_value_area(f) || Tag_val (f) == get_Forward_tag()
                       || Tag_val (f) == Lazy_tag || Tag_val (f) == Double_tag)){
                 /* Do not short-circuit the pointer. */
               }else{
                 Field (v, i) = f;
               }
             }
-            else if (Tag_hd(hd) == Infix_tag) {
+            else if (Tag_hd(hd) == get_Infix_tag()) {
               child -= Infix_offset_val(child);
               hd = Hd_val(child);
             }
@@ -213,10 +213,10 @@ static void mark_slice (intnat work)
           weak_again:
             if (curfield != caml_weak_none
                 && Is_block (curfield) && Is_in_heap (curfield)){
-              if (Tag_val (curfield) == Forward_tag){
+              if (Tag_val (curfield) == get_Forward_tag()){
                 value f = Forward_val (curfield);
                 if (Is_block (f)) {
-                  if (!Is_in_value_area(f) || Tag_val (f) == Forward_tag
+                  if (!Is_in_value_area(f) || Tag_val (f) == get_Forward_tag()
                       || Tag_val (f) == Lazy_tag || Tag_val (f) == Double_tag){
                     /* Do not short-circuit the pointer. */
                   }else{
@@ -545,7 +545,7 @@ void caml_darken_r (pctxt ctx, value v, value *p /* not used */)
   if (Is_block (v) && Is_in_heap (v)) {
     header_t h = Hd_val (v);
     tag_t t = Tag_hd (h);
-    if (t == Infix_tag){
+    if (t == get_Infix_tag()){
       v -= Infix_offset_val(v);
       h = Hd_val (v);
       t = Tag_hd (h);
@@ -603,17 +603,17 @@ static void mark_slice_r (pctxt ctx, intnat work)
           child = Field (v, i);
           if (Is_block (child) && Is_in_heap (child)) {
             hd = Hd_val (child);
-            if (Tag_hd (hd) == Forward_tag){
+            if (Tag_hd (hd) == get_Forward_tag()){
               value f = Forward_val (child);
               if (Is_block (f)
-                  && (!Is_in_value_area(f) || Tag_val (f) == Forward_tag
+                  && (!Is_in_value_area(f) || Tag_val (f) == get_Forward_tag()
                       || Tag_val (f) == Lazy_tag || Tag_val (f) == Double_tag)){
                 /* Do not short-circuit the pointer. */
               }else{
                 Field (v, i) = f;
               }
             }
-            else if (Tag_hd(hd) == Infix_tag) {
+            else if (Tag_hd(hd) == get_Infix_tag()) {
               child -= Infix_offset_val(child);
               hd = Hd_val(child);
             }
@@ -679,10 +679,10 @@ static void mark_slice_r (pctxt ctx, intnat work)
           weak_again:
             if (curfield != caml_weak_none
                 && Is_block (curfield) && Is_in_heap (curfield)){
-              if (Tag_val (curfield) == Forward_tag){
+              if (Tag_val (curfield) == get_Forward_tag()){
                 value f = Forward_val (curfield);
                 if (Is_block (f)) {
-                  if (!Is_in_value_area(f) || Tag_val (f) == Forward_tag
+                  if (!Is_in_value_area(f) || Tag_val (f) == get_Forward_tag()
                       || Tag_val (f) == Lazy_tag || Tag_val (f) == Double_tag){
                     /* Do not short-circuit the pointer. */
                   }else{

@@ -333,7 +333,7 @@ static void intern_rec(value *dest)
         *intern_dest = Make_header(size, tag, intern_color);
         intern_dest += 1 + size;
         /* For objects, we need to freshen the oid */
-        if (tag == Object_tag) {
+        if (tag == get_Object_tag()) {
           Assert(size >= 2);
           /* Request to read rest of the elements of the block */
           ReadItems(&Field(v, 2), size - 2);
