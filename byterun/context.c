@@ -6,6 +6,7 @@
 #include "context.h"
 #include "mlvalues.h"
 #include "minor_gc.h"
+#include "major_gc.h"
 #include <stdlib.h>
 #include <pthread.h>
 #include "gc.h"
@@ -264,4 +265,85 @@ void sync_with_context(pctxt ctx){
 
 void destroy_context(pctxt ctxt){
   free(ctxt);
+}
+
+char* tag_string(int tag){
+  if (Forward_tag==tag)
+    return "Forward_tag";
+  if (Lazy_tag==tag)
+    return "Lazy_tag";
+  if (Object_tag==tag)
+    return "Object_tag";
+  if (Infix_tag==tag)
+    return "Infix_tag";
+  if (Closure_tag==tag)
+    return "Closure_tag";
+  if (String_tag==tag)
+    return "String_tag";
+  if (Double_tag==tag)
+    return "Double_tag";
+  if (Double_array_tag==tag)
+    return "Double_array_tag";
+  if (Custom_tag==tag)
+    return "Custom_tag";
+  return "normal tag";
+}
+
+char *color_string(int col){
+  if (col==Caml_black) return "Black";
+  if (col==Caml_gray)  return "Gray ";
+  if (col==Caml_white) return "White";
+  if (col==Caml_blue)  return "Blue ";
+  return "Unknown";
+}
+
+void traverse_all_blocks(pctxt ctx){
+  char *chunk, *chend;
+  char *block;
+  header_t hd;
+  value v;
+  int wosize, col, tag;
+  int i;
+  
+  printf("traverse_all_blocks young heap %p %p\n", ctx->caml_young_ptr, ctx->caml_young_end);
+  
+  block = ctx->caml_young_ptr;
+  while (block < ctx->caml_young_end){
+    v = Val_hp(block);
+    hd = Hd_val(v);
+    tag = Tag_hd(hd);
+    wosize = Wosize_hd(hd);
+
+    printf("young block ptr = %p tag = %3d wosize = %3d (%s)\n",
+             block, tag, wosize,tag_string(tag));
+    for (i=0; i<10 && i<wosize-1; i++)
+      printf("%02p ", *(value*)(v+i));
+    printf("\n");
+    
+    block += Bhsize_wosize(wosize);
+  }
+  
+  printf("traverse_all_blocks old heap %p %d\n", ctx->caml_heap_start, Chunk_size(ctx->caml_heap_start));
+  chunk = ctx->caml_heap_start;
+  while (chunk!=NULL){
+    chend = chunk + Chunk_size(chunk);
+    block = chunk;
+    while (block < chend){
+      v = Val_hp(block);
+      hd = Hd_val(v);
+      tag = Tag_hd(hd);
+      col = Color_hd(hd);
+      wosize = Wosize_hd(hd);
+      
+      if (col!=Caml_blue){
+        printf("old block ptr = %p tag = %3d color = %s  wosize = %3d (%s)\n",
+                 block, tag, color_string(col), wosize, tag_string(tag));
+        for (i=0; i<10 && i<wosize-1; i++)
+          printf("%02p ", *(value*)(v+i));
+        printf("\n");
+      }
+      block += Bhsize_wosize(wosize);
+    }
+    chunk = Chunk_next (chunk);
+  }
 }
